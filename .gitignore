@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.mp4
+recording/
+*.csv
+*.xlsx
+*.RData
+data/
+*.DS_Store
+*.vtt
