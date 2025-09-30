@@ -4,13 +4,13 @@
 
 ## Table of Contents
 
-- Overview
-- 1. Survey Design Notes
-- 2. Software Requirements
-- 3. Data Access
-- 4. Data Preparation
-- 5. Descriptive Statistics
-- 6. Regression Model
+-  Overview
+-  1. Survey Design Notes
+-  2. Software Requirements
+-  3. Data Access
+-  4. Data Preparation
+-  5. Descriptive Statistics
+-  6. Regression Model
 
 ### Overview
 This analysis investigates fertility intentions among Canadians aged 14–49 using the 2017 General Social Survey (GSS). The goal is to identify associations between fertility intentions and self-rated physical health, controlling for demographic variables.
