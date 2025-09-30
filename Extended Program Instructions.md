@@ -2,8 +2,6 @@
 title: Replicability Instructions - CAnD3 RRWM Exercise
 author: Leah Houseman
 date: September 30, 2025
-toc: TRUE
-toc_float: TRUE
 ---
 
 ### Overview
