@@ -243,7 +243,7 @@ data$EHG3_01B <- NULL #Remove old variable
 
 
 **Drop missing values from variables of interest (CH3YRS, SRPH, AGEC, SEX, MARSTAT, EDULVL)**
-```{r}
+```{r missing}
 data <- data |> 
   filter(
     !is.na(CH3YRS),
@@ -264,7 +264,7 @@ summary(data$EDULVL)
 ```
 
 **Create a table to display the percent and count for the CH3YRS variable by EDULVL variable, called "edulvl_table**
-```{r}
+```{r descriptive table}
 edulvl_table <- data |> 
   count(CH3YRS, EDULVL) |> 
   group_by(CH3YRS) |> 
@@ -291,12 +291,12 @@ edulvl_table <- data |>
 edulvl_table
 
 #Save table
-gtsave(edulvl_table, "/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/edulvl_table.html")
+gtsave(edulvl_table, "/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/Tables/edulvl_table.html")
 
 ```
 
 **Logistic Regression (Output = CH3YRS, Input = SRPH, SEX, EDULVL, MARSTAT, AGEC) with table displaying results, seed set at 567 for replicability purposes, capture session info**
-```{r}
+```{r logistic regression}
 set.seed(567) #set the seed for replicability purposes
 
 
@@ -331,12 +331,12 @@ LogR_table <- LogR_table |>
 LogR_table
 
 #save table
-gtsave(LogR_table, "/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/LogR_table.html")
+gtsave(LogR_table, "/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/Tables/LogR_table.html")
 
 ```
 
 
-```{r}
+```{r session info}
 #Document session info
 sessionInfo()
 #Save to a file
