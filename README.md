@@ -20,8 +20,8 @@
 - Expanded program instructions
 - Code
 #### ***4. Using extended program only, attempt to replicate.***
-- Program instructions located in this folder, `Extended Program Instructions`
-- Code located in this folder,`Program Code`
+- Program instructions located in this folder, `Extended Program Instructions.md`
+- Code located in this folder,`Program Code.Rmd`
 #### ***5. Compare your code with partner's actual code.***
 - Interpret reasons for coding differences
 - Identify how program lead to these results and reflect on how it might have been written to improve reproducibility. 
