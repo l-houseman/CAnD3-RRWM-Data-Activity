@@ -1,0 +1,335 @@
+---
+title: "Program Code_CAnD3 RRWM Exercise"
+author: "Leah Houseman"
+date: "`r Sys.Date()`"
+output:
+   pdf_document: default
+   html_document:
+     keep_md: yes
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+#packages
+
+library(tidyverse)
+library(tidymodels)
+library(knitr)
+library(kableExtra)
+library(gt)
+library(broom)
+library(ggplot2)
+library(naniar)
+
+
+```
+
+
+#### **Download data and call in dataset**
+- Dataset is available to download from Canvas course for CAnD3 fellows only. For more information on how to access this data for purposes beyond the CAnD3 Training Program, see the `Data Accessibility Statement` in this repository. 
+- Call in dataset **(Be sure to change the file location to match the dataset on your local computer & call the dataframe "data" in order to ensure the code works without editing)**
+```{r setup}
+data <- read_csv("/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/Dataset_gss-12M0025-E-2017-c-31_F1.csv")
+```
+
+##### **Take initial look at data to examine structure**
+```{r load data}
+glimpse(data)
+```
+
+#### **Understand the nature of missing data**
+```{r evaluate missing}
+missing_table <- miss_var_summary(data)
+missing_table
+```
+- We can see that the missing data has been accounted for via special missing values. These will need to be dealt with for the variables of interest. 
+
+#### **Define Research Question and Recode Key Variables**
+- This analysis will aim to answer the questions 1) What percentage of Canadians aged between 14-49 intend to have a child in the next 3 years? and 2) Does this vary by self-rated physical health? 
+- The sample will be limited to those aged under 50 (AGEC) and who (or whose spouse) have not been told that they cannot have any(more) biological children (Respondent = FI_140, Spouse = FI_240: 1 = Yes, 2 = No).
+- The primary independent variable (CH3YRS) will use a survey question (FI_105) that asked "do you intend to have a(nother) child within the next 3 years?
+- Drop missing data from variables of interest. Usually, a data imputation method would be used to handle missing data, but for the purposes of this exercise, drop the missing values from the dataframe.
+
+**Remove those over age 50 and those who or (whose spouse) have been told they cannot have any(more) biological children**
+
+```{r remove over 50 & infertile}
+#Remove respondents over age 50
+glimpse(data$AGEC) #view variable
+summary(data$AGEC)
+#Remove those over age 50
+data <- data |> subset(AGEC < 50)
+#View variable after change
+glimpse(data$AGEC)
+summary(data$AGEC)
+
+#Exclude if respondent or spouse has been told they cannot have any(more) bio children. 1 = Has bee told, 2 = Has not been told. 6-9 represent different flavours of missing data, so they will be assigned as missing and dropped from this dataframe. 
+glimpse(data$FI_140)
+summary(data$FI_140)
+#Assign missing values (6-9)
+data <- data |> 
+  replace_with_na(replace = list(FI_140 = c(6, 7, 8, 9)))
+#Remove those who responded yes
+data <- data |> subset(FI_140 != 1)
+#View variable to ensure this worked as intended
+summary(data$FI_140)
+table(data$FI_140)
+
+
+#Do the same for the spouse (FI_240)
+glimpse(data$FI_240)
+summary(data$FI_240)
+#Assign missing values (6-9)
+data <- data |> 
+  replace_with_na(replace = list(FI_240 = c(6, 7, 8, 9)))
+#Remove those who responded yes
+data <- data |> subset(FI_240 != 1)
+#View variable to ensure this worked as intended
+summary(data$FI_240)
+table(data$FI_240)
+```
+
+**Create a binary outcome variable, "CH3YRS" to reflect fertility intentions (Yes/No) within the next 3 years**
+```{r create outcome var}
+#View variable to examine structure
+glimpse(data$FI_105)
+summary(data$FI_105)
+table(data$FI_105)
+
+#We can tell based on the codebook that 1 = Definitely yes, 2 = Probably yes, 3 = Probably Not, 4 = No, definitely not, and 5 = unsure. 6-9 represent different flavours of missing data, so they will be assigned as missing and dropped from this dataframe. 
+
+data <- data |> 
+  replace_with_na(replace = list(FI_105 = c(6, 7, 8, 9)))
+summary(data$FI_105) #view variable to ensure this worked
+
+#Now I will transform this variable into yes/no variable, CH3YRS
+data <- data |> 
+  mutate(CH3YRS = case_when(
+    FI_105 == 1 ~ "1_Yes",
+    FI_105 == 2 ~ "1_Yes", 
+    FI_105 == 3 ~ "2_No",
+    FI_105 == 4 ~ "2_No",
+    FI_105 == 5 ~ "2_No",
+    FI_105 == 6 ~ "2_No",
+  ))
+table(data$FI_105, data$CH3YRS) #compare old and new variable to ensure recode worked as intended
+#view new variable to ensure it looks as intended
+glimpse(data$CH3YRS)
+data$CH3YRS <- as.factor(data$CH3YRS) #recode as factor variable
+summary(data$CH3YRS)
+table(data$CH3YRS)
+
+data$FI_105 <- NULL #Remove old variable
+```
+
+**Recode the primary independent variable, Self-Rated Physical Health (SRPH using codebook variable SRH_110)**
+
+```{r recode input var}
+#View variable
+glimpse(data$SRH_110)
+summary(data$SRH_110)
+table(data$SRH_110)
+#The "Don't know," "refusal," and "not stated" responses (6-9) need to be designated as missing
+data <- data |> 
+  replace_with_na(replace = list(SRH_110 = c(6, 7, 8, 9)))
+summary(data$SRH_110) #view variable to ensure this worked
+#This variable is originally coded as 5 = poor and 1 = excellent, but for ease of interpretation, I will recode the scale to start with poor = 1 and end with excellent = 5.
+data <- data |> 
+  mutate(SRPH = case_when(
+    SRH_110 == 1 ~ "5_Excellent",
+    SRH_110 == 2 ~ "4_Very Good",
+    SRH_110 == 3 ~ "3_Good",
+    SRH_110 == 4 ~ "2_Fair",
+    SRH_110 == 5 ~ "1_Poor",
+  ))
+
+glimpse(data$SRPH) # View recoded variable
+data$SRPH <- as.factor(data$SRPH) #Recode as  factor variable
+
+#View old variable and new to make sure recode processed correctly, view new variable
+table(data$SRH_110, data$SRPH)
+glimpse(data$SRPH)
+summary(data$SRPH)
+
+data$SRH_110 <- NULL #Remove old variable
+```
+
+**Age, measured in whole numbers (Codebook variable AGEC)**
+```{r recode age}
+#Since there are multiple measures of age (Groups of 5/10-year intervals, a whole number version, and a decimal point version), I am going to keep the one that measures in whole numbers (AGEC). The rest can be made null.
+data$AGEDC <- NULL
+data$AGEGR5 <- NULL
+data$AGEGR10 <- NULL
+
+#View the variable to confirm it does not need recoding
+glimpse(data$AGEC)
+summary(data$AGEC)
+table(data$AGEC) #There are no missing data on this one.
+```
+
+***Sex***
+```{r recode sex}
+#View variable
+glimpse(data$SEX)
+summary(data$SEX)
+table(data$SEX) #There are no missing data on this variable. 
+
+#For ease of interpretation, I am adding labels to this variable.
+data <- data |> 
+  mutate(SEX = case_when(
+    SEX == 1 ~ "1_Male",
+    SEX == 2 ~ "2_Female"
+  ))
+data$SEX <- as.factor(data$SEX) #recode as factor variable
+glimpse(data$SEX) # View recoded variable
+summary(data$SEX)
+```
+  
+***Martial Status***
+
+```{r recode marstat}
+#View variable
+glimpse(data$MARSTAT) 
+summary(data$MARSTAT)
+table(data$MARSTAT) #There are no remaining missing data after we removed those out of scope of this analysis.
+
+#This variable has multiple categories that effectually mean "no longer married" for various reasons. For ease of analysis, I am going to combine these categories.
+data <- data |> 
+  mutate(MARSTAT = case_when(
+    MARSTAT == 1 ~ "1_Married",
+    MARSTAT == 2 ~ "2_Common Law",
+    MARSTAT == 3 ~ "3_Widowed/Separated/Divorced",
+    MARSTAT == 4 ~ "3_Widowed/Separated/Divorced",
+    MARSTAT == 5 ~ "3_Widowed/Separated/Divorced",
+    MARSTAT == 6 ~ "4_Single",
+  ))
+data$MARSTAT <- as.factor(data$MARSTAT) #recode as factor variable
+glimpse(data$MARSTAT) # View recoded variable
+summary(data$MARSTAT)
+```
+
+***Education level (EDULVL, using codebook variable EHG3_01B)***
+```{r recode edulvl}
+#View variable
+glimpse(data$EHG3_01B) 
+summary(data$EHG3_01B)
+table(data$EHG3_01B)
+#The "Don't know," "refusal," and "not stated" responses (96-99) need to be accounted as missing
+data <- data %>%
+  replace_with_na(replace = list(EHG3_01B = c(96, 97, 98, 99)))
+summary(data$EHG3_01B) #check to make sure this worked
+
+#This variable has multiple categories that effectually mean "post-secondary education below the bachelor's level". For ease of analysis, I am going to combine some of these categories and add labels
+data <- data |> 
+  mutate(EDULVL = case_when(
+    EHG3_01B == 1 ~ "1_Less than H.S.",
+    EHG3_01B == 2 ~ "2_H.S/Equiv",
+    EHG3_01B == 3 ~ "3_P.S under Bach",
+    EHG3_01B == 4 ~ "3_P.S under Bach",
+    EHG3_01B == 5 ~ "3_P.S under Bach",
+    EHG3_01B == 6 ~ "4_Bach Degree",
+    EHG3_01B == 7 ~ "5_Post Bach Lvl",
+  ))
+
+glimpse(data$EDULVL) # View recoded variable
+data$EDULVL <- as.factor(data$EDULVL) #Recode as factor variable
+
+#View old variable and new to make sure recode processed correctly, view new variable
+table(data$EHG3_01B, data$EDULVL)
+glimpse(data$EDULVL)
+summary(data$EDULVL)
+
+data$EHG3_01B <- NULL #Remove old variable 
+```
+
+
+**Drop missing values from variables of interest (CH3YRS, SRPH, AGEC, SEX, MARSTAT, EDULVL)**
+```{r}
+data <- data |> 
+  filter(
+    !is.na(CH3YRS),
+    !is.na(SRPH),
+    !is.na(AGEC),
+    !is.na(SEX),
+    !is.na(MARSTAT),
+    !is.na(EDULVL),
+  )
+
+#View variables to ensure this worked
+summary(data$CH3YRS)
+summary(data$SRPH)
+summary(data$AGEC)
+summary(data$MARSTAT)
+summary(data$EDULVL)
+
+```
+
+**Create a table to display the percent and count for the CH3YRS variable by EDULVL variable, called "edulvl_table**
+```{r}
+edulvl_table <- data |> 
+  count(CH3YRS, EDULVL) |> 
+  group_by(CH3YRS) |> 
+  mutate(percent = round(100 * n / sum(n), 1)) |> 
+  ungroup() |> 
+  select(-n) |> 
+  pivot_wider(names_from = CH3YRS, values_from = percent) |> 
+  gt() |> 
+  tab_header(
+    title = "Descriptive Statistics by Fertility Intention by Education Level", 
+    subtitle = "Percent distribution"
+  ) |> 
+  cols_label(
+    EDULVL = "Education Level", 
+    "1_Yes" = "Yes", 
+    "2_No" = "No"
+  ) |> 
+  tab_options(
+    table.background.color = "#4D4E53",
+  ) |> 
+  tab_footnote(md("*Data from 2017 GSS, Statistics Canada
+                  N = 4,164*"))
+
+edulvl_table
+
+```
+
+**Logistic Regression (Output = CH3YRS, Input = SRPH, SEX, EDULVL, MARSTAT, AGEC) with table displaying results, seed set at 567 for replicability purposes, capture session info**
+```{r}
+set.seed(567) #set the seed for replicability purposes
+
+
+# Run logistic regression
+LogRegressionModel <- glm(CH3YRS ~ SRPH + SEX + EDULVL + MARSTAT + AGEC,
+             data = data,
+             family = binomial)
+
+# Tidy the model output
+LogR_results <- tidy(LogRegressionModel, exponentiate = TRUE, conf.int = TRUE)
+
+# Display results in a formatted table
+LogR_results |>
+  select(term, estimate, conf.low, conf.high, p.value) |>
+  rename(
+    Term = term,
+    OR = estimate,
+    `CI Lower` = conf.low,
+    `CI Upper` = conf.high,
+    `P-value` = p.value
+  ) |>
+  gt() |>
+  tab_header(
+    title = "Logistic Regression Results",
+    subtitle = "Predicting Fertility Intentions"
+  ) |> 
+  tab_options(
+    table.background.color = "#4D4E53",
+  ) |> 
+  tab_footnote(md("*Data from 2017 GSS, Statistics Canada
+                  N = 4,164*"))
+
+#Document session info
+sessionInfo()
+
+```
+  
