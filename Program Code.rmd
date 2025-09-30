@@ -328,6 +328,7 @@ LogR_table <- LogR_table |>
   ) |> 
   tab_footnote(md("*Data from 2017 GSS, Statistics Canada
                   N = 4,164*"))
+LogR_table
 
 #save table
 gtsave(LogR_table, "/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/LogR_table.html")
