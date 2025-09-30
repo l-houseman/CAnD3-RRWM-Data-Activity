@@ -1,18 +1,10 @@
 ---
+title: Replicability Instructions - CAnD3 RRWM Exercise
+author: Leah Houseman
+date: September 30, 2025
 toc: TRUE
 toc_float: TRUE
 ---
-
-# Replicability Instructions – CAnD3 RRWM Exercise
-## Table of Contents
-
-- Overview
-- 1 Survey Design Notes
-- 2 Software Requirements
-- 3 Data Access
-- 4 Data Preparation
-- 5 Descriptive Statistics
-- 6 Regression Model
 
 ### Overview
 This analysis investigates fertility intentions among Canadians aged 14–49 using the 2017 General Social Survey (GSS). The goal is to identify associations between fertility intentions and self-rated physical health, controlling for demographic variables.
@@ -39,14 +31,14 @@ Use **R** (version ≥ 4.2 recommended). Required packages:
 - naniar
 
 Session Info:
-- R version and platform, locale settings, and attached packages with versions documented in `session_info.txt`
+- R version and platform, locale settings, and attached packages with versions documented in [a relative link] (session_info.txt)
 ---
 
 ### 3. Data Access
 
 - Dataset: 2017 General Social Survey (GSS), Statistics Canada  
-- File: `Dataset_gss-12M0025-E-2017-c-31_F1.csv`  
-- Access: Available to CAnD3 fellows via Canvas. For external use, refer to the Data Accessibility Statement.
+- File: Available to download from CAnD3 Canvas
+- Access: Available to CAnD3 fellows via Canvas. For external use, refer to the `Data Accessibility Statement`.
 
 Place the dataset in your working directory and name the data frame `data`.
 
