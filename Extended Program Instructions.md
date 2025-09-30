@@ -1,5 +1,5 @@
 ---
-title: Replicability Instructions - CAnD3 RRWM Exercise
+title: Replication Instructions - CAnD3 RRWM Exercise
 author: Leah Houseman
 date: September 30, 2025
 ---
@@ -36,7 +36,7 @@ Session Info:
 
 - Dataset: 2017 General Social Survey (GSS), Statistics Canada  
 - File: Available to download from CAnD3 Canvas
-- Access: Available to CAnD3 fellows via Canvas. For external use, refer to the `Data Accessibility Statement`.
+- Access: Available to CAnD3 fellows via Canvas. For external use, refer to the `Data Accessibility Statement` located in this folder.
 
 Place the dataset in your working directory and name the data frame `data`.
 

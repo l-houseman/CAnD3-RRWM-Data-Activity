@@ -9,11 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Leah Houseman" />
 
-<meta name="date" content="2025-09-30" />
 
-<title>Replicability Instructions - CAnD3 RRWM Exercise</title>
+<title>README</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -335,66 +333,6 @@ display: none;
 
 
 
-<style type="text/css">
-#TOC {
-margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-position: relative;
-width: 100%;
-}
-}
-@media print {
-#TOC {
-display: none !important;
-}
-.toc-content {
-
-float: right;
-}
-}
-.toc-content {
-padding-left: 30px;
-padding-right: 40px;
-}
-div.main-container {
-max-width: 1200px;
-}
-div.tocify {
-width: 20%;
-max-width: 260px;
-max-height: 85%;
-}
-@media (min-width: 768px) and (max-width: 991px) {
-div.tocify {
-width: 25%;
-}
-}
-@media (max-width: 767px) {
-div.tocify {
-width: 100%;
-max-width: none;
-}
-}
-.tocify ul, .tocify li {
-line-height: 20px;
-}
-.tocify-subheader .tocify-item {
-font-size: 0.90em;
-}
-.tocify .list-group-item {
-border-radius: 0px;
-}
-.tocify-subheader {
-display: inline;
-}
-.tocify-subheader .tocify-item {
-font-size: 0.95em;
-}
-</style>
-
-
 
 </head>
 
@@ -404,224 +342,84 @@ font-size: 0.95em;
 <div class="container-fluid main-container">
 
 
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
 
 
 <div id="header">
 
 
 
-<h1 class="title toc-ignore">Replicability Instructions - CAnD3 RRWM
-Exercise</h1>
-<h4 class="author">Leah Houseman</h4>
-<h4 class="date">September 30, 2025</h4>
 
 </div>
 
 
-<div id="table-of-contents" class="section level2">
-<h2>Table of Contents</h2>
-<ul>
-<li>Overview</li>
-<li><ol style="list-style-type: decimal">
-<li>Survey Design Notes</li>
-</ol></li>
-<li><ol start="2" style="list-style-type: decimal">
-<li>Software Requirements</li>
-</ol></li>
-<li><ol start="3" style="list-style-type: decimal">
-<li>Data Access</li>
-</ol></li>
-<li><ol start="4" style="list-style-type: decimal">
-<li>Data Preparation</li>
-</ol></li>
-<li><ol start="5" style="list-style-type: decimal">
-<li>Descriptive Statistics</li>
-</ol></li>
-<li><ol start="6" style="list-style-type: decimal">
-<li>Regression Model</li>
-</ol></li>
-</ul>
-<div id="overview" class="section level3">
-<h3>Overview</h3>
-<p>This analysis investigates fertility intentions among Canadians aged
-14–49 using the 2017 General Social Survey (GSS). The goal is to
-identify associations between fertility intentions and self-rated
-physical health, controlling for demographic variables.</p>
-<hr />
+<div id="cand3-rrwm-exercise" class="section level3">
+<h3>CAnD3 RRWM Exercise</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">This repository houses Leah Houseman’s CAnD3 RRWM
+Exercise Materials</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>Leah Houseman</strong></td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Department of Sociology, University of
+Saskatchewan</strong></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>r Sys.Date()</code></td>
+</tr>
+<tr class="even">
+<td align="left">CAnD3 2025-26 Fellow</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="survey-design-notes" class="section level3">
-<h3>1. Survey Design Notes</h3>
-<blockquote>
-<p>⚠️ This analysis does <strong>not</strong> apply survey weights or
-design corrections. Results reflect <strong>unweighted
-estimates</strong>.</p>
-</blockquote>
-<hr />
-</div>
-<div id="software-requirements" class="section level3">
-<h3>2. Software Requirements</h3>
-<p>Use <strong>R</strong> (version ≥ 4.2 recommended). Required
-packages:</p>
+<div id="assignment-tasks" class="section level3">
+<h3><strong>Assignment Tasks:</strong></h3>
+<div id="choose-pumf-dataset" class="section level4">
+<h4><strong><em>1. Choose PUMF Dataset</em></strong></h4>
 <ul>
-<li>tidyverse</li>
-<li>tidymodels</li>
-<li>knitr</li>
-<li>kableExtra</li>
-<li>gt</li>
-<li>broom</li>
-<li>ggplot2</li>
-<li>naniar</li>
-</ul>
-<p>Session Info: - R version and platform, locale settings, and attached
-packages with versions documented in <code>session_info.txt</code> —</p>
-</div>
-<div id="data-access" class="section level3">
-<h3>3. Data Access</h3>
-<ul>
-<li>Dataset: 2017 General Social Survey (GSS), Statistics Canada<br />
-</li>
-<li>File: <code>Dataset_gss-12M0025-E-2017-c-31_F1.csv</code><br />
-</li>
-<li>Access: Available to CAnD3 fellows via Canvas. For external use,
-refer to the Data Accessibility Statement.</li>
-</ul>
-<p>Place the dataset in your working directory and name the data frame
-<code>data</code>.</p>
-<hr />
-</div>
-<div id="data-preparation" class="section level3">
-<h3>4. Data Preparation</h3>
-<div id="sample-restrictions" class="section level4">
-<h4>Sample Restrictions</h4>
-<ul>
-<li><strong>Age filter</strong>: Keep only respondents under age 50
-(<code>AGEC &lt; 50</code>).</li>
-<li><strong>Fertility eligibility</strong>: Exclude respondents or
-spouses who answered “Yes” to being told they cannot have (more)
-biological children. These are coded as <code>1</code> in variables
-<code>FI_140</code> and <code>FI_240</code>.</li>
-<li>Treat values <code>6–9</code> in these variables as missing and
-exclude them.</li>
-</ul>
-</div>
-<div id="outcome-variable-fertility-intentions-ch3yrs" class="section level4">
-<h4>Outcome Variable: Fertility Intentions (<code>CH3YRS</code>)</h4>
-<ul>
-<li>Source: <code>FI_105</code></li>
-<li>Recode:
-<ul>
-<li>Values <code>1</code> and <code>2</code> → “Yes”</li>
-<li>Values <code>3</code>, <code>4</code>, and <code>5</code> →
-“No”</li>
-<li>Values <code>6–9</code> → treated as missing and excluded</li>
-</ul></li>
-<li>Convert to a binary factor variable with levels:
-<code>&quot;1_Yes&quot;</code> and <code>&quot;2_No&quot;</code></li>
-</ul>
-</div>
-<div id="independent-variables" class="section level4">
-<h4>Independent Variables</h4>
-<p><strong>Self-Rated Physical Health (<code>SRPH</code>)</strong> -
-Source: <code>SRH_110</code> - Recode: - <code>1</code> → “Excellent” -
-<code>2</code> → “Very Good” - <code>3</code> → “Good” - <code>4</code>
-→ “Fair” - <code>5</code> → “Poor” - Reverse the scale so that “Poor” =
-1 and “Excellent” = 5 - Treat values <code>6–9</code> as missing and
-exclude them - Convert to an ordered factor</p>
-<p><strong>Sex (<code>SEX</code>)</strong> - Recode: - <code>1</code> →
-“Male” - <code>2</code> → “Female” - Convert to factor</p>
-<p><strong>Marital Status (<code>MARSTAT</code>)</strong> - Recode: -
-<code>1</code> → “Married” - <code>2</code> → “Common Law” -
-<code>3</code>, <code>4</code>, <code>5</code> →
-“Widowed/Separated/Divorced” - <code>6</code> → “Single” - Convert to
-factor</p>
-<p><strong>Education Level (<code>EDULVL</code>)</strong> - Source:
-<code>EHG3_01B</code> - Recode: - <code>1</code> → “Less than High
-School” - <code>2</code> → “High School or Equivalent” - <code>3</code>,
-<code>4</code>, <code>5</code> → “Post-Secondary below Bachelor’s” -
-<code>6</code> → “Bachelor’s Degree” - <code>7</code> → “Post-Bachelor
-Level” - Treat values <code>96–99</code> as missing and exclude them -
-Convert to factor</p>
-<p><strong>Age (<code>AGEC</code>)</strong> - Retain as-is (whole number
-format)</p>
-</div>
-<div id="final-filtering" class="section level4">
-<h4>Final Filtering</h4>
-<p>Exclude any rows with missing values in the following variables:</p>
-<ul>
-<li><code>CH3YRS</code>, <code>SRPH</code>, <code>AGEC</code>,
-<code>SEX</code>, <code>MARSTAT</code>, <code>EDULVL</code></li>
-</ul>
-<hr />
-</div>
-</div>
-<div id="descriptive-statistics" class="section level3">
-<h3>5. Descriptive Statistics</h3>
-<ul>
-<li>Generate a table showing the percent distribution of fertility
-intentions (CH3YRS) by education level (EDULVL) using gt(). Expected
-results include higher percentege of positive fertility intention for
-education levels lower than the post bachelor level.</li>
-<li>Table was generated using the <code>gt</code> package and saved with
-<code>gtsave()</code></li>
-<li>The descriptive table is saved in the repository folder and can be
-viewed directly: <code>edulvl_table</code></li>
-</ul>
-<hr />
-</div>
-<div id="regression-model" class="section level3">
-<h3>6. Regression Model</h3>
-<ul>
-<li><strong>Model type</strong>: Logistic regression</li>
-<li><strong>Outcome</strong>: Fertility intentions
-(<code>CH3YRS</code>)</li>
-<li><strong>Predictors</strong>: <code>SRPH</code>, <code>SEX</code>,
-<code>EDULVL</code>, <code>MARSTAT</code>, <code>AGEC</code></li>
-<li><strong>Seed</strong>: Set to <code>567</code> to ensure
-reproducibility of any random processes</li>
-<li><strong>Reference Categories</strong> are the <strong>first
-level</strong> of each factor variable:
-<ul>
-<li><code>SEX</code>: “Male”</li>
-<li><code>EDULVL</code>: “Less than High School”</li>
-<li><code>MARSTAT</code>: “Married”</li>
-<li><code>SRPH</code>: “Poor”</li>
-</ul></li>
-<li><strong>Logistic regression results table should include the
-following columns:</strong>
-<ul>
-<li>Term: The name of the predictor variable or level (e.g.,
-SEX2_Female, SRPH5_Excellent)</li>
-<li>Odds Ratio (OR): The exponentiated coefficient from the logistic
-regression</li>
-<li>95% Confidence Interval:</li>
-<li>CI Lower: Lower bound of the confidence interval for the OR</li>
-<li>CI Upper: Upper bound of the confidence interval for the OR</li>
-<li>P-value: The significance level of the predictor</li>
-</ul></li>
-<li>These values are extracted using broom::tidy() with the arguments:
-<code>tidy(model, exponentiate = TRUE, conf.int = TRUE)</code></li>
-<li>Table was generated using the <code>gt</code> package and saved with
-<code>gtsave()</code></li>
-<li>Expected results: The regression table is saved in the repository
-folder and can be viewed directly: <code>LogR_table</code></li>
+<li>Statistics Canada. 2020. General Social Survey, Cycle 31, 2017
+[Canada]: Family (version 2020-09). Statistics Canada [producer and
+distributor], accessed September 10, 2021. ID: gss-12M0025-E-2017-c-31
+#### <strong><em>2. Write a program containing:</em></strong></li>
+<li>Recoded variables</li>
+<li>One table featuring descriptive statistics</li>
+<li>One table featuring regression results #### <strong><em>3. Exchange
+program and code with partner via Canvas by providing a link to git
+repository. Include:</em></strong></li>
+<li>README</li>
+<li>Data Accessibility Statement</li>
+<li>Expanded program instructions</li>
+<li>Code #### <strong><em>4. Using extended program only, attempt to
+replicate.</em></strong></li>
+<li>Program instructions located in this folder,
+<code>Extended Program Instructions.md</code></li>
+<li>Code located in this folder,<code>Program Code.Rmd</code> ####
+<strong><em>5. Compare your code with partner’s actual
+code.</em></strong></li>
+<li>Interpret reasons for coding differences</li>
+<li>Identify how program lead to these results and reflect on how it
+might have been written to improve reproducibility.</li>
+<li>Post questions/comments/reflections to RRWM discussion forum on
+Canvas by Oct 14, prepare to discuss during Oct 15 session. ####
+<strong><em>6. Fill out reproducibility report based on template
+available in Canvas.</em></strong></li>
+<li>Post completed report on the second RRWM discussion forum in Canvas
+by Oct 24.</li>
 </ul>
 </div>
 </div>
 
 
 
-</div>
-</div>
 
 </div>
 
@@ -654,35 +452,6 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = false;
-    options.smoothScroll = false;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
