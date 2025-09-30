@@ -4,8 +4,7 @@ author: "Leah Houseman"
 date: "`r Sys.Date()`"
 output:
    pdf_document: default
-   html_document:
-     keep_md: yes
+   keep_md: yes
 ---
 
 
@@ -27,7 +26,8 @@ library(naniar)
 
 #### **Download data and call in dataset**
 - Dataset is available to download from Canvas course for CAnD3 fellows only. For more information on how to access this data for purposes beyond the CAnD3 Training Program, see the `Data Accessibility Statement` in this repository. 
-- Call in dataset **(Be sure to change the file location to match the dataset on your local computer & call the dataframe "data" in order to ensure the code works without editing)**
+- Call in dataset 
+!! **(Be sure to change the file location to match the dataset on your local computer & call the dataframe "data" in order to ensure the code works without editing)**
 ```{r load data}
 data <- read_csv("/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/Dataset_gss-12M0025-E-2017-c-31_F1.csv")
 ```
@@ -341,5 +341,4 @@ gtsave(LogR_table, "/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/C
 sessionInfo()
 #Save to a file
 writeLines(capture.output(sessionInfo()), "session_info.txt")
-
 ```
