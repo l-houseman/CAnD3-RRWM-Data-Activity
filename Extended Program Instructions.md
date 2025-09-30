@@ -4,8 +4,8 @@
 
 ## Table of Contents
 
--  Overview
--  1. Survey Design Notes
+- Overview
+- 1. Survey Design Notes
 -  2. Software Requirements
 -  3. Data Access
 -  4. Data Preparation
