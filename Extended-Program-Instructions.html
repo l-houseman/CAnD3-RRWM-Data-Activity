@@ -333,6 +333,66 @@ display: none;
 
 
 
+<style type="text/css">
+#TOC {
+margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+position: relative;
+width: 100%;
+}
+}
+@media print {
+#TOC {
+display: none !important;
+}
+.toc-content {
+
+float: right;
+}
+}
+.toc-content {
+padding-left: 30px;
+padding-right: 40px;
+}
+div.main-container {
+max-width: 1200px;
+}
+div.tocify {
+width: 20%;
+max-width: 260px;
+max-height: 85%;
+}
+@media (min-width: 768px) and (max-width: 991px) {
+div.tocify {
+width: 25%;
+}
+}
+@media (max-width: 767px) {
+div.tocify {
+width: 100%;
+max-width: none;
+}
+}
+.tocify ul, .tocify li {
+line-height: 20px;
+}
+.tocify-subheader .tocify-item {
+font-size: 0.90em;
+}
+.tocify .list-group-item {
+border-radius: 0px;
+}
+.tocify-subheader {
+display: inline;
+}
+.tocify-subheader .tocify-item {
+font-size: 0.95em;
+}
+</style>
+
+
 
 </head>
 
@@ -340,6 +400,16 @@ display: none;
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -354,32 +424,16 @@ display: none;
 
 <div id="replicability-instructions-cand3-rrwm-exercise" class="section level1">
 <h1>Replicability Instructions – CAnD3 RRWM Exercise</h1>
-<div id="author-leah-houseman" class="section level3">
-<h3>author: “Leah Houseman”</h3>
-</div>
-<div id="date-r.sys.date" class="section level3">
-<h3>date: “<code>r.Sys.Date()</code>”</h3>
-</div>
 <div id="table-of-contents" class="section level2">
 <h2>Table of Contents</h2>
 <ul>
-<li>overview</li>
-<li>1-survey-design-notes</li>
-<li><ol start="2" style="list-style-type: decimal">
-<li>Software Requirements</li>
-</ol></li>
-<li><ol start="3" style="list-style-type: decimal">
-<li>Data Access</li>
-</ol></li>
-<li><ol start="4" style="list-style-type: decimal">
-<li>Data Preparation</li>
-</ol></li>
-<li><ol start="5" style="list-style-type: decimal">
-<li>Descriptive Statistics</li>
-</ol></li>
-<li><ol start="6" style="list-style-type: decimal">
-<li>Regression Model</li>
-</ol></li>
+<li>Overview</li>
+<li>1 Survey Design Notes</li>
+<li>2 Software Requirements</li>
+<li>3 Data Access</li>
+<li>4 Data Preparation</li>
+<li>5 Descriptive Statistics</li>
+<li>6 Regression Model</li>
 </ul>
 <div id="overview" class="section level3">
 <h3>Overview</h3>
@@ -551,6 +605,8 @@ folder and can be viewed directly: <code>LogR_table</code></li>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -583,6 +639,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

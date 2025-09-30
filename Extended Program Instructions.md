@@ -1,7 +1,9 @@
-# Replicability Instructions – CAnD3 RRWM Exercise
-### author: "Leah Houseman"
-### date: "`r.Sys.Date()`"
+---
+toc: TRUE
+toc_float: TRUE
+---
 
+# Replicability Instructions – CAnD3 RRWM Exercise
 ## Table of Contents
 
 - Overview
