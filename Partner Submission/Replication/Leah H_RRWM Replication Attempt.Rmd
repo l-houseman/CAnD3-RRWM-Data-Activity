@@ -1,0 +1,164 @@
+---
+title: "RRWM Exercise_Stage 2_Replication Attempt"
+author: "Leah Houseman"
+date: "`r Sys.Date()`"
+output:
+   pdf_document: default
+   keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+#Load required packages
+library(tidyverse)
+library(haven)
+library(labelled)
+library(modelsummary)
+library(stargazer)
+library(broom)
+library(readxl)
+library(janitor)
+library(MASS)
+library(effects)
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(ggplot2)
+
+```
+
+
+#### 1. Obtain and load the 2017 GSS public dataset
+#### 2. Place the raw file under data/.
+#### 3. Run the scripts
+- `code/00_setup.R`
+
+```{r}
+# Load libraries
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(MASS)          # for polr()
+library(modelsummary)  
+library(ggplot2)
+library(effects)
+
+# Global options
+options(stringsAsFactors = FALSE, scipen = 999)
+set.seed(1234)
+
+message("Setup complete.")
+```
+
+- `code/01_clean.R`
+```{r}
+# 01_clean.R
+source("/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/Partner Submission/code/00_setup.R")
+
+
+# Import raw CSV #Had to change file path
+gss <- read_csv("/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/Partner Submission/data/gss-12M0025-E-2017-c-31_F1.csv") %>%
+  clean_names()
+
+# Recode education
+gss <- gss %>%
+  mutate(
+    educ3 = case_when(
+      ehg3_01b %in% c(1, 2) ~ "HighSchoolOrLess",
+      ehg3_01b %in% c(3, 4, 5) ~ "PostSecondaryNonUniversity",
+      ehg3_01b %in% c(6, 7) ~ "UniversityPlus",
+      TRUE ~ NA_character_
+    ),
+    educ3 = factor(educ3,
+                   levels = c("HighSchoolOrLess",
+                              "PostSecondaryNonUniversity",
+                              "UniversityPlus"),
+                   ordered = TRUE)
+  )
+
+# Recode year of arrival
+gss <- gss %>%
+  mutate(
+    yrarri = ifelse(yrarri %in% c(96,97,98,99), NA, yrarri),
+    yrarri = factor(yrarri,
+                    levels = 1:14,
+                    labels = c("pre1946","1946-59","1960-64","1965-69",
+                               "1970-74","1975-79","1980-84","1985-89",
+                               "1990-94","1995-99","2000-04","2005-09",
+                               "2010-14","2015-17"),
+                    ordered = TRUE)
+  )
+
+# Save cleaned dataset
+write_csv(gss, "/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/Partner Submission/data/analysis_ready.csv")
+message("Data cleaning complete, saved to data/analysis_ready.csv")
+```
+
+- `code_02_analysis.R`
+```{r}
+# 02_analysis.R
+source("/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/Partner Submission/code/00_setup.R")
+
+# Load cleaned dataset
+dat <- read_csv("/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/Partner Submission/data/analysis_ready.csv", show_col_types = FALSE)
+
+# Table 1: descriptives
+tab1 <- dat %>%
+  filter(!is.na(educ3), !is.na(yrarri)) %>%
+  count(yrarri, educ3) %>%
+  group_by(yrarri) %>%
+  mutate(pct = round(n / sum(n) * 100, 1))
+
+write_csv(tab1, "/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/Partner Submission/outputs/table_descriptives.csv")
+
+# Plot descriptives
+p1 <- ggplot(tab1, aes(x = yrarri, y = pct/100, fill = educ3)) +
+  geom_col(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    title = "Education distribution by year of arrival in Canada (GSS 2017)",
+    x = "Year of Arrival", y = "Percentage", fill = "Education level"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggsave("/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/Partner Submission/outputs/descriptive_plot.png", p1, width = 9, height = 5, dpi = 300)
+
+# Regression
+
+dat$educ3 <- as.factor(dat$educ3) #had to recode as factor for this to work
+
+fit <- polr(educ3 ~ yrarri, data = dat, Hess = TRUE) #Error when trying to run "polr response must be a factor"
+
+modelsummary(
+  fit,
+  output = "/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/Partner Submission/outputs/table_regression.csv",
+  exponentiate = TRUE,
+  gof_omit = "AIC|BIC|Log.Lik"
+)
+
+# Predicted probabilities
+eff <- effects::Effect("yrarri", fit)
+png("/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/Partner Submission/outputs/regression_predictions.png", width = 900, height = 600)
+plot(eff,
+     main="Predicted probabilities of education levels by year of arrival",
+     xlab="Year of arrival", ylab="Predicted probability")
+dev.off()
+
+```
+
+- `code_03_export.R`
+```{r}
+# 03_export.R
+source("/Users/leahj/Desktop/CAnD3/CAnD3/CAnD3_RWork/RRWM Exercise/CAnD3-RRWM-Exercise/Partner Submission/code/00_setup.R")
+
+message("Export step: all outputs already generated in 02_analysis.R")
+message("Files in outputs/: 
+ - table_descriptives.csv
+ - table_regression.csv
+ - descriptive_plot.png
+ - regression_predictions.png")
+
+```
+
