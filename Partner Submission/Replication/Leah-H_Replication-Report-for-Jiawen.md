@@ -12,7 +12,7 @@ date: October 24, 2025
 
 **Analysis Data Files**
 
--   FIles were provided in clear order. Again, required updating of file paths on my part, but then it worked as intended , aside from a factor variable recoding issue in `02_analysis.R`.
+-   Files were provided in clear order. Again, required updating of file paths on my part, but then it worked as intended , aside from a factor variable recoding issue in `02_analysis.R`.
 -   *Note:* It is entirely possible that the file path issue was due to my current technical ability with R.
 
 **Code Description**
@@ -29,7 +29,7 @@ date: October 24, 2025
 
 -   Once I adjusted the file paths and ran the code files, nothing was missing.
 
--   However, in `02_analysis.R`, in the regression step, I had to recode
+-   However, in `02_analysis.R`, in the regression step, I had to recode the education variable as a factor.
 
 **Computing Environment of the Replicator**
 
@@ -43,7 +43,7 @@ date: October 24, 2025
 
 1.  ***Data Preparation Code***
 
--   My replication attempt code is available in the `Partner Submission/Replication` folder as `Leah H_RRWN Replication Attempt.rmd` (LINK)
+-   My replication attempt code is available in the `Partner Submission/Replication` folder as `Leah H_RRWN Replication Attempt.rmd` (\`Partner Submission/Replication/Leah H_RRWM Replication Attempt.Rmd\`)
 
 1.  ***Tables***
 
